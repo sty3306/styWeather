@@ -1,5 +1,6 @@
 package com.example.styweather.ui.place
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -16,9 +17,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.styweather.R
+import com.sunnyweather.android.ui.weather.WeatherActivity
 import java.util.zip.Inflater
 
 class PlaceFragment : Fragment() {
+
 
     val viewModel by lazy { ViewModelProviders.of(this).get(PlaceViewModel::class.java) }
     private lateinit var adapter: PlaceAdapter
@@ -39,6 +42,19 @@ class PlaceFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        if (viewModel.isPlaceSaved()) {
+            val place = viewModel.getSavePlace()
+            val intent = Intent(context, WeatherActivity::class.java).apply {
+                putExtra("location_lng", place.location.lng)
+                putExtra("location_lat", place.location.lat)
+                putExtra("place_name", place.name)
+
+            }
+            startActivity(intent)
+            activity?.finish()
+            return
+        }
         val layoutManager = LinearLayoutManager(activity)
         recyclerView = root?.findViewById(R.id.recyclerView)
         searchPlaceEdit = root?.findViewById(R.id.searchPlaceEdit)

@@ -2,6 +2,7 @@ package com.example.styweather.logic
 
 import android.util.Log
 import androidx.lifecycle.liveData
+import com.example.styweather.logic.dao.PlaceDao
 import com.example.styweather.logic.model.Place
 import com.example.styweather.logic.model.Weather
 import com.example.styweather.logic.network.SunnyWeatherNetwork
@@ -14,6 +15,12 @@ import kotlin.coroutines.CoroutineContext
 
 object Repository {
     private val TAG = Repository::class.simpleName
+
+    fun savePlace(place: Place) = PlaceDao.savePlace(place)
+    fun getSavePlace() = PlaceDao.getSacePlace()
+    fun isPlaceSaved() = PlaceDao.isPlaceSaved()
+
+
     fun searchPlaces(query: String) = fire(Dispatchers.IO) {
 
         val placeResponse = SunnyWeatherNetwork.searchPlaces(query)

@@ -7,22 +7,25 @@ import com.example.styweather.logic.Repository
 import com.example.styweather.logic.model.Place
 import okhttp3.Response
 
-class PlaceViewModel : ViewModel (){
+class PlaceViewModel : ViewModel() {
 
-    private val searchLiveData=MutableLiveData<String>()
+    private val searchLiveData = MutableLiveData<String>()
 
-    val placeList =ArrayList<Place>()
+    val placeList = ArrayList<Place>()
 
-    val placeLiveData=Transformations.switchMap(searchLiveData){
+    val placeLiveData = Transformations.switchMap(searchLiveData) {
         Repository.searchPlaces(query = it)
     }
 
-    fun searchPlaces(query:String){
-        searchLiveData.value=query
+    fun searchPlaces(query: String) {
+        searchLiveData.value = query
     }
 
+    fun savePlace(place: Place) = Repository.savePlace(place)
 
+    fun getSavePlace() = Repository.getSavePlace()
 
+    fun isPlaceSaved() = Repository.isPlaceSaved()
 
 
 }
