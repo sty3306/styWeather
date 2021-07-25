@@ -16,8 +16,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.styweather.MainActivity
 import com.example.styweather.R
-import com.sunnyweather.android.ui.weather.WeatherActivity
+import com.example.styweather.ui.weather.WeatherActivity
+
 import java.util.zip.Inflater
 
 class PlaceFragment : Fragment() {
@@ -42,8 +44,7 @@ class PlaceFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        if (viewModel.isPlaceSaved()) {
+        if (activity is MainActivity && viewModel.isPlaceSaved()) {
             val place = viewModel.getSavePlace()
             val intent = Intent(context, WeatherActivity::class.java).apply {
                 putExtra("location_lng", place.location.lng)

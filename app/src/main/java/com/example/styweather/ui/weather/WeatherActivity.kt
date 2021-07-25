@@ -1,5 +1,6 @@
-package com.sunnyweather.android.ui.weather
+package com.example.styweather.ui.weather
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
@@ -32,8 +33,12 @@ class WeatherActivity : AppCompatActivity() {
 
     val viewModel by lazy { ViewModelProviders.of(this).get(WeatherViewModel::class.java) }
     val TAG = WeatherActivity::class.simpleName
+
+    @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         val decorView = window.decorView
         decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -42,16 +47,16 @@ class WeatherActivity : AppCompatActivity() {
         setContentView(R.layout.activity_weather)
         if (viewModel.locationLong.isEmpty()) {
             viewModel.locationLong = intent.getStringExtra("location_lng") ?: ""
-            Log.d(TAG,"locatiolong--->"+viewModel.locationLong)
+            Log.d(TAG, "locatiolong--->" + viewModel.locationLong)
         }
         if (viewModel.locationLat.isEmpty()) {
             viewModel.locationLat = intent.getStringExtra("location_lat") ?: ""
-            Log.d(TAG,"locationLat--->"+viewModel.locationLat)
+            Log.d(TAG, "locationLat--->" + viewModel.locationLat)
 
         }
         if (viewModel.placeName.isEmpty()) {
             viewModel.placeName = intent.getStringExtra("place_name") ?: ""
-            Log.d(TAG,"placeName--->"+viewModel.placeName)
+            Log.d(TAG, "placeName--->" + viewModel.placeName)
 
 
         }
@@ -63,11 +68,50 @@ class WeatherActivity : AppCompatActivity() {
                 Toast.makeText(this, "无法成功获取天气信息", Toast.LENGTH_SHORT).show()
                 result.exceptionOrNull()?.printStackTrace()
             }
+            swipeRefresh.isRefreshing = false
+
 
         })
-        viewModel.refreshWeather(viewModel.locationLong, viewModel.locationLat)
+        swipeRefresh.setColorSchemeColors(R.color.teal_200)
+        refreshWeather()
+        swipeRefresh.setOnRefreshListener {
+            refreshWeather()
+        }
+
+        navBtn.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+
+        }
+        drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                manager.hideSoftInputFromWindow(
+                    drawerView.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
+            }
+
+            override fun onDrawerStateChanged(newState: Int) {
+
+            }
+
+
+        })
     }
 
+
+    fun refreshWeather() {
+        viewModel.refreshWeather(viewModel.locationLong, viewModel.locationLat)
+        swipeRefresh.isRefreshing = true
+    }
 
     private fun showWeatherInfo(weather: Weather) {
         placeName.text = viewModel.placeName
