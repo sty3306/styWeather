@@ -1,5 +1,6 @@
 package com.example.styweather.logic.network
 
+import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -10,8 +11,14 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 object SunnyWeatherNetwork {
+    private val TAG=SunnyWeatherNetwork::class.simpleName
+    private val weatherService=ServiceCreator.create(WeatherService::class.java)
 
     private val placeService = ServiceCreator.create(PlaceService::class.java)
+
+    suspend fun getDailyWeather(lng :String,lat:String)= weatherService.getDailyWeather(lng, lat).await()
+
+    suspend fun getRealtimeWeather(lng :String,lat:String)= weatherService.getRealtimeWeather(lng, lat).await()
 
     suspend fun searchPlaces(query:String)= placeService.searchPlaces(query).await()
 
@@ -24,6 +31,7 @@ object SunnyWeatherNetwork {
 
                 override fun onResponse(call: Call<T>, response: Response<T>) {
                     val body=response.body()
+                    Log.d(TAG,"body--->$body")
                     if(body!=null) continuation.resume(body)
                     else continuation.resumeWithException(RuntimeException("response body is null"))
 
