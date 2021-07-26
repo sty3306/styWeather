@@ -17,6 +17,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.base.app.base.BaseActivity
 import com.example.styweather.R
 import com.example.styweather.logic.model.Weather
 import com.example.styweather.ui.weather.WeatherViewModel
@@ -29,12 +30,12 @@ import kotlinx.android.synthetic.main.now.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class WeatherActivity : AppCompatActivity() {
+class  WeatherActivity :BaseActivity() {
 
     val viewModel by lazy { ViewModelProviders.of(this).get(WeatherViewModel::class.java) }
     val TAG = WeatherActivity::class.simpleName
 
-    @SuppressLint("ResourceAsColor")
+    @SuppressLint("ResourceAsColor", "NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,6 +46,7 @@ class WeatherActivity : AppCompatActivity() {
         window.statusBarColor = Color.TRANSPARENT
 
         setContentView(R.layout.activity_weather)
+
         if (viewModel.locationLong.isEmpty()) {
             viewModel.locationLong = intent.getStringExtra("location_lng") ?: ""
             Log.d(TAG, "locatiolong--->" + viewModel.locationLong)
