@@ -8,6 +8,7 @@ import android.view.View
 import android.view.Window
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.example.styweather.base.ActivityCollector
 
 
 open class BaseActivity : AppCompatActivity() {
@@ -17,6 +18,12 @@ open class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d("BaseAvtivity", javaClass.simpleName)
         supportActionBar?.hide()
+        ActivityCollector.addActivity(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ActivityCollector.removeActivity(this)
     }
 
 }
